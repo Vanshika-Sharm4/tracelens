@@ -1,0 +1,5 @@
+Workload: mlp on cpu (torch 2.14.1+cu130, 20 paired runs)
+  baseline step           : 11.087 ms
+  profiled step           : 12.108 ms
+  overhead, profiled step : 9.2%
+  overhead, amortized 1/20 : 0.46%

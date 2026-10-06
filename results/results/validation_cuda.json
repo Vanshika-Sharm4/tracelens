@@ -1,0 +1,99 @@
+{
+  "reference_check": [
+    {
+      "model": "mlp",
+      "device": "cuda",
+      "operators_compared": 6,
+      "median_rel_error": 4.145393820560564e-14,
+      "max_rel_error": 2.4652118807969927,
+      "total_self_ms_tracelens": 5.094365000000001,
+      "total_self_ms_torch": 2.669277000000002,
+      "total_rel_error": 0.9085186737831994
+    },
+    {
+      "model": "cnn",
+      "device": "cuda",
+      "operators_compared": 15,
+      "median_rel_error": 6.74357689031622e-14,
+      "max_rel_error": 13.113927173557952,
+      "total_self_ms_tracelens": 6.586104000000001,
+      "total_self_ms_torch": 4.494824000000004,
+      "total_rel_error": 0.46526404593372156
+    },
+    {
+      "model": "tiny_gpt",
+      "device": "cuda",
+      "operators_compared": 15,
+      "median_rel_error": 1.8057950609670246e-14,
+      "max_rel_error": 1.1376175614251858,
+      "total_self_ms_tracelens": 7.534752,
+      "total_self_ms_torch": 4.159724,
+      "total_rel_error": 0.8113586382173433
+    },
+    {
+      "model": "transformer_encoder",
+      "device": "cuda",
+      "operators_compared": 15,
+      "median_rel_error": 1.9607560300957357e-14,
+      "max_rel_error": 2.5469008617254985,
+      "total_self_ms_tracelens": 3.34817,
+      "total_self_ms_torch": 1.9510120000000017,
+      "total_rel_error": 0.7161196343231088
+    },
+    {
+      "model": "tiny_ops",
+      "device": "cuda",
+      "operators_compared": 3,
+      "median_rel_error": 0.7089457999506674,
+      "max_rel_error": 4.008906967910456,
+      "total_self_ms_tracelens": 6.151571,
+      "total_self_ms_torch": 2.164197999999994,
+      "total_rel_error": 1.8424252309631637
+    },
+    {
+      "model": "sync_heavy",
+      "device": "cuda",
+      "operators_compared": 10,
+      "median_rel_error": 2.848144911185906e-14,
+      "max_rel_error": 2.248860012281357,
+      "total_self_ms_tracelens": 2.8803699999999997,
+      "total_self_ms_torch": 1.3663439999999987,
+      "total_rel_error": 1.10808551872735
+    }
+  ],
+  "seeded_bottlenecks": [
+    {
+      "model": "tiny_ops",
+      "device": "cuda",
+      "expected_any_of": [
+        "launch_overhead",
+        "small_ops"
+      ],
+      "found": [
+        "hotspot",
+        "idle_gap",
+        "launch_overhead",
+        "memory_bound",
+        "peak_memory"
+      ],
+      "passed": true,
+      "note": ""
+    },
+    {
+      "model": "sync_heavy",
+      "device": "cuda",
+      "expected_any_of": [
+        "idle_gap"
+      ],
+      "found": [
+        "hotspot",
+        "idle_gap",
+        "launch_overhead",
+        "memory_bound",
+        "peak_memory"
+      ],
+      "passed": true,
+      "note": ""
+    }
+  ]
+}

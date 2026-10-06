@@ -1,0 +1,5 @@
+Workload: tiny_gpt on cpu (torch 2.14.1+cu130, 20 paired runs)
+  baseline step           : 48.456 ms
+  profiled step           : 54.720 ms
+  overhead, profiled step : 12.9%
+  overhead, amortized 1/20 : 0.65%

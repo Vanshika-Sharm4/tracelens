@@ -1,0 +1,14 @@
+Per-operator self time: TraceLens vs torch.profiler key_averages()
+model                   ops  median err   max err  total err
+mlp                       9       0.00%     0.00%      0.00%
+cnn                      15       0.00%     0.00%      0.00%
+tiny_gpt                 15       0.00%     0.00%      0.00%
+transformer_encoder      15       0.00%     0.00%      0.00%
+tiny_ops                  7       0.00%     0.00%      0.00%
+sync_heavy               15       0.00%     0.00%      0.00%
+
+Seeded bottlenecks
+  PASS tiny_ops     expected any of ['launch_overhead', 'small_ops']; found ['hotspot', 'memory_bound', 'peak_memory', 'small_ops'] 
+  PASS sync_heavy   expected any of none; found ['hotspot', 'memory_bound', 'peak_memory', 'small_ops'] no GPU timeline on CPU: host-sync detection needs a GPU
+
+Written to results/validation_cpu.json

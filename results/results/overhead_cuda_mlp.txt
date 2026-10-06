@@ -1,0 +1,5 @@
+Workload: mlp on cuda (torch 2.11.0+cu130, 20 paired runs)
+  baseline step           : 1.061 ms
+  profiled step           : 4.616 ms
+  overhead, profiled step : 334.9%
+  overhead, amortized 1/20 : 16.75%

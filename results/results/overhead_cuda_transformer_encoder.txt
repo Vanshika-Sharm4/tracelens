@@ -1,0 +1,5 @@
+Workload: transformer_encoder on cuda (torch 2.11.0+cu130, 20 paired runs)
+  baseline step           : 3.394 ms
+  profiled step           : 12.717 ms
+  overhead, profiled step : 274.6%
+  overhead, amortized 1/20 : 13.73%
