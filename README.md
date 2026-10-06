@@ -2,6 +2,18 @@
 
 An ML inference profiler and bottleneck visualizer for PyTorch. It captures a `torch.profiler` trace, finds where the time goes, and shows it in a browser: a zoomable timeline, a flame graph, and a ranked list of findings with suggested fixes.
 
+## Screenshots
+
+**Findings and summary.** Ranked bottlenecks with the share of the run each one costs, and a suggested fix.
+
+![Findings and summary](docs/images/findings.png)
+
+**Timeline.** Zoomable view of host operators and GPU kernels; click a finding to jump to the region it describes.
+
+![Timeline](docs/images/timeline.png)
+
+*Screenshots are from a CPU run of the demo models on a laptop. GPU results are in [results/](results/).*
+
 - **Python package + CLI**: profile a model, analyze a saved trace, measure profiling overhead, validate the analysis.
 - **Analysis engine**: per-operator self time, GPU utilization, idle-gap attribution, roofline classification, and detectors for the common bottlenecks.
 - **FastAPI service + React/TypeScript UI**: profile a demo model or upload any Chrome-trace JSON.
