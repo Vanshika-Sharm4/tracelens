@@ -47,26 +47,23 @@ Design notes and limits are in [docs/DESIGN.md](docs/DESIGN.md).
 
 Run `tracelens validate` (CPU or `--device cuda`). Outputs checked into `results/`.
 
-- **Against torch.profiler**: per-operator self time from TraceLens matches `prof.key_averages()` on 6 demo models (mlp, cnn, tiny_gpt, transformer_encoder, tiny_ops, sync_heavy) with 0.00% error on the CPU run. This checks the parser and nesting logic, not the detectors. It is expected to match closely because both read the same profiler data.
+- **Against torch.profiler**: per-operator self time from TraceLens matches `prof.key_averages()` on 6 demo models (mlp, cnn, tiny_gpt, transformer_encoder, tiny_ops, sync_heavy) with 0.00% error on CPU. This checks the parser and nesting logic, not the detectors, and both read the same profiler data. **GPU status:** the first T4 run (`results/validation_cuda_first_run.txt`) did NOT match (max error 113-1311%, total 47-185%). The cause I found: torch nests CUDA runtime calls (`cudaLaunchKernel`) under the launching op and subtracts them from self time, while TraceLens keeps launch time in the op. Validation now re-nests the same way before comparing. That fix is tested on a synthetic trace but has not yet been re-run on a GPU.
 - **Seeded bottlenecks**: `tiny_ops` (thousands of tiny ops) must trigger `launch_overhead` or `small_ops`; on a GPU, `sync_heavy` must trigger `idle_gap`. The CPU run passes; the GPU-only check needs a GPU (see below).
 - **Synthetic traces**: `tests/` plants known patterns (launch-bound, sync gaps, memory-bound mix) and checks they are found, and that a healthy trace is not flagged.
 
 ### Profiling overhead
 
-Measured with paired, interleaved baseline and profiled runs (`tracelens overhead`), CPU, torch 2.14:
+Measured with paired, interleaved baseline and profiled runs (`tracelens overhead`, 20 pairs; 1 step in 20 for the amortized column).
 
-| Workload | Per profiled step | Amortized, 1 step in 20 profiled |
-|---|---|---|
-| tiny_gpt | 12.9% | 0.65% |
-| mlp | 9.2% | 0.46% |
+| Workload | Device | Per profiled step | Amortized, 1 in 20 profiled |
+|---|---|---|---|
+| tiny_gpt | CPU | 12.9% | 0.65% |
+| mlp | CPU | 9.2% | 0.46% |
+| tiny_gpt | Tesla T4 | 271.4% | 13.57% |
+| transformer_encoder | Tesla T4 | 274.6% | 13.73% |
+| mlp | Tesla T4 | 334.9% | 16.75% |
 
-Profiling every step costs roughly 5-20% on CPU here, not under 5%. Under 5% holds only when you sample (profile 1 step in N), which is how it would be used in serving. GPU numbers: run `tracelens overhead --device cuda` and record them in `results/`.
-
-### Not yet done
-
-- GPU validation numbers (needs a GPU; command below).
-- A peer study of time-to-find-a-bottleneck. [docs/USER_TEST.md](docs/USER_TEST.md) is the protocol; no results are claimed.
-- No C++ component. The profiler wraps `torch.profiler`.
+**This does not meet "under 5%".** On the GPU, a profiled step takes about 3-4x as long as an unprofiled one. These demo models run steps of 1-5 ms, so the profiler's fixed per-step cost (CUPTI setup and trace collection) dominates; larger models would show a smaller percentage, but that is untested here. Sampling cuts the average, but 1-in-20 still costs 14-17% on a T4. Only the CPU runs, at 1-in-20 sampling, are under 1%.
 
 ## GPU run (Colab or any CUDA machine)
 
@@ -81,7 +78,7 @@ tracelens overhead --model transformer_encoder --device cuda
 ## Tests
 
 ```bash
-pytest -q                          # 44 Python tests, CPU only
+pytest -q                          # 45 Python tests, CPU only
 cd frontend && npm test            # view maths, layout, hit testing
 ```
 
