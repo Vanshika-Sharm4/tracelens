@@ -1,0 +1,95 @@
+{
+  "reference_check": [
+    {
+      "model": "mlp",
+      "device": "cpu",
+      "operators_compared": 9,
+      "median_rel_error": 2.6767951901961088e-14,
+      "max_rel_error": 3.1058010134846e-13,
+      "total_self_ms_tracelens": 14.718422,
+      "total_self_ms_torch": 14.718421999999999,
+      "total_rel_error": 1.2358589824003256e-16
+    },
+    {
+      "model": "cnn",
+      "device": "cpu",
+      "operators_compared": 15,
+      "median_rel_error": 4.178024710467093e-15,
+      "max_rel_error": 7.76257670859241e-14,
+      "total_self_ms_tracelens": 4.908801,
+      "total_self_ms_torch": 4.908801,
+      "total_rel_error": 0.0
+    },
+    {
+      "model": "tiny_gpt",
+      "device": "cpu",
+      "operators_compared": 15,
+      "median_rel_error": 9.891134717568822e-15,
+      "max_rel_error": 1.9316982047950705e-13,
+      "total_self_ms_tracelens": 52.47632899999999,
+      "total_self_ms_torch": 52.47632899999999,
+      "total_rel_error": 0.0
+    },
+    {
+      "model": "transformer_encoder",
+      "device": "cpu",
+      "operators_compared": 15,
+      "median_rel_error": 5.34987137899588e-15,
+      "max_rel_error": 4.6325617194143853e-14,
+      "total_self_ms_tracelens": 38.856192,
+      "total_self_ms_torch": 38.85619199999999,
+      "total_rel_error": 1.8725349139162752e-16
+    },
+    {
+      "model": "tiny_ops",
+      "device": "cpu",
+      "operators_compared": 7,
+      "median_rel_error": 2.728833395993479e-15,
+      "max_rel_error": 1.2270603022624713e-14,
+      "total_self_ms_tracelens": 1.672435,
+      "total_self_ms_torch": 1.6724349999999992,
+      "total_rel_error": 4.078610088462012e-16
+    },
+    {
+      "model": "sync_heavy",
+      "device": "cpu",
+      "operators_compared": 15,
+      "median_rel_error": 7.010235735508359e-15,
+      "max_rel_error": 3.20923843055699e-14,
+      "total_self_ms_tracelens": 1.236553,
+      "total_self_ms_torch": 1.2365529999999998,
+      "total_rel_error": 1.838770157391006e-16
+    }
+  ],
+  "seeded_bottlenecks": [
+    {
+      "model": "tiny_ops",
+      "device": "cpu",
+      "expected_any_of": [
+        "launch_overhead",
+        "small_ops"
+      ],
+      "found": [
+        "hotspot",
+        "memory_bound",
+        "peak_memory",
+        "small_ops"
+      ],
+      "passed": true,
+      "note": ""
+    },
+    {
+      "model": "sync_heavy",
+      "device": "cpu",
+      "expected_any_of": [],
+      "found": [
+        "hotspot",
+        "memory_bound",
+        "peak_memory",
+        "small_ops"
+      ],
+      "passed": true,
+      "note": "no GPU timeline on CPU: host-sync detection needs a GPU"
+    }
+  ]
+}
